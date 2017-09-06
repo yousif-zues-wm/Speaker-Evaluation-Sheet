@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html ng-app='myApp'  ng-controller="myCtrl">
+  <head>
+    <meta charset="utf-8">
+    <title>Speaker Review</title>
+    <script type="text/javascript" src='http://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js'></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style media="screen">
+.ignore{
+background:none;
+border:none;
+bottom:auto;
+clear:none;
+cursor:default;
+/* didn't really know what the default for display should be*/
+/*display:inline;*/
+float:none;
+font-family:Arial, Helvetica, sans-serif;
+font-size:medium;
+font-style:normal;
+font-weight:normal;
+height:auto;
+left:auto;
+letter-spacing:normal;
+line-height:normal;
+max-height:none;
+max-width:none;
+min-height:0;
+min-width:0;
+overflow:visible;
+position:static;
+right:auto;
+text-align:left;
+text-decoration:none;
+text-indent:0;
+text-transform:none;
+top:auto;
+visibility:visible;
+white-space:normal;
+width:auto;
+z-index:auto;
+}
+</style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Speaker Review</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav ">
+              <li class="active"><a ng-click='hide()'>{{text}}</a></li>
+              <li><a id='cmd'>Download</a></li>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+    <div ng-show='!hidden' class="ignore">
+        <h1>Year Up Speaker Evaluation</h1>
+        <div class="col-md-6">
+      <form class="form">
+      <label for="name">Name:</label>  <input type="text" class='form-control' name="name" placeholder='Your Name' ng-model='name' value=""><br>
+    <label for="pname">Presenter Name:</label>  <input class='form-control' type="text" placeholder='Presenter Name' name="pname" value="" ng-model='presname'><br>
+      <label for="topic">Topic: </label><input class='form-control' type="text" ng-model='topic' name="topic" placeholder='Topic' value=""><hr>
+      <h2>Comments</h2><br>
+      <label for="">What I liked most about this presentation was:</label>
+      <input type="text" ng-model='comment1' class='form-control' placeholder="What I liked most about this presentation was" name="" value=""><br>
+      <label for="">Some strategies or insights I gained from this presentation are:</label>
+      <input type="text" ng-model='comment2' class='form-control' placeholder='Some strategies or insights I gained from this presentation are' name="" value=""><br>
+      <label for="">I am<input type="radio" ng-model='am' name="" value="I am"></label>
+      <label for="">I am not <input type="radio" ng-model='am' name="" value="I am not"></label>
+      <input type="text" name="" class='form-control' ng-model='comment3' placeholder='{{am}} motiviated by this presenter because' value=""><br>
+      <label for="">Some things I may consider doing as a result of this presentation are:</label>
+      <input type="text" class='form-control' ng-model='comment4' placeholder="Some things I may consider doing as a result of this presentation are" name="" value=""><br>
+      <label for="">Additional comments: </label>
+      <input type="text" name="" placeholder='Additional comments' class='form-control' ng-model='comment5' value="">
+    </div>
+    </form>
+    <div class="col-md-6">
+
+    <h3>Organization</h3>
+    <form class="form">
+        <label for="one">Topic Adequitley Developed: </label><label for="">1</label><input ng-model='topicDev.rad' type="radio" name="one" value="1">
+        <label for="">2</label><input ng-model='topicDev.rad' type="radio" name="one" value="2">
+        <label for="">3</label><input ng-model='topicDev.rad' type="radio" name="one" value="3">
+        <label for="">4</label><input ng-model='topicDev.rad' type="radio" name="one" value="4">
+        <label for="">5</label><input ng-model='topicDev.rad' type="radio" name="one" value="5">
+    </form><br>
+    <form class="form">
+        <label for="one">Good Intorduction, Body, & Conclusion: </label><label for="">1</label><input ng-model='topicDev.rad1' type="radio" name="one" value="1">
+        <label for="">2</label><input ng-model='topicDev.rad1' type="radio" name="one" value="2">
+        <label for="">3</label><input ng-model='topicDev.rad1' type="radio" name="one" value="3">
+        <label for="">4</label><input ng-model='topicDev.rad1' type="radio" name="one" value="4">
+        <label for="">5</label><input ng-model='topicDev.rad1' type="radio" name="one" value="5">
+    </form><br>
+    <form class="form">
+        <label for="one">Logical Sequence of Ideas: </label><label for="">1</label><input ng-model='topicDev.rad2' type="radio" name="one" value="1">
+        <label for="">2</label><input ng-model='topicDev.rad2' type="radio" name="one" value="2">
+        <label for="">3</label><input ng-model='topicDev.rad2' type="radio" name="one" value="3">
+        <label for="">4</label><input ng-model='topicDev.rad2' type="radio" name="one" value="4">
+        <label for="">5</label><input ng-model='topicDev.rad2' type="radio" name="one" value="5">
+    </form>
+    <h3>Language</h3>
+    <form class="form">
+        <label for="one">Proper Grammar: </label><label for="">1</label><input ng-model='topicDev.rad3' type="radio" name="one" value="1">
+        <label for="">2</label><input ng-model='topicDev.rad3' type="radio" name="one" value="2">
+        <label for="">3</label><input ng-model='topicDev.rad3' type="radio" name="one" value="3">
+        <label for="">4</label><input ng-model='topicDev.rad3' type="radio" name="one" value="4">
+        <label for="">5</label><input ng-model='topicDev.rad3' type="radio" name="one" value="5">
+    </form><br>
+    <form class="form">
+        <label for="one">Appropriate Word Choice: </label><label for="">1</label><input ng-model='topicDev.rad4' type="radio" name="one" value="1">
+        <label for="">2</label><input ng-model='topicDev.rad4' type="radio" name="one" value="2">
+        <label for="">3</label><input ng-model='topicDev.rad4' type="radio" name="one" value="3">
+        <label for="">4</label><input ng-model='topicDev.rad4' type="radio" name="one" value="4">
+        <label for="">5</label><input ng-model='topicDev.rad4' type="radio" name="one" value="5">
+    </form><br>
+    <label for="one">Correct Pronounciation: </label><label for="">1</label><input ng-model='topicDev.rad5' type="radio" name="one" value="1">
+    <label for="">2</label><input ng-model='topicDev.rad5' type="radio" name="one" value="2">
+    <label for="">3</label><input ng-model='topicDev.rad5' type="radio" name="one" value="3">
+    <label for="">4</label><input ng-model='topicDev.rad5' type="radio" name="one" value="4">
+    <label for="">5</label><input ng-model='topicDev.rad5' type="radio" name="one" value="5">
+</form><br>
+<h3>Delivery</h3>
+<form>
+<label for="one">Good Inflection and Enunciation: </label><label for="">1</label><input ng-model='topicDev.rad6' type="radio" name="one" value="1">
+<label for="">2</label><input ng-model='topicDev.rad6' type="radio" name="one" value="2">
+<label for="">3</label><input ng-model='topicDev.rad6' type="radio" name="one" value="3">
+<label for="">4</label><input ng-model='topicDev.rad6' type="radio" name="one" value="4">
+<label for="">5</label><input ng-model='topicDev.rad6' type="radio" name="one" value="5">
+</form><br>
+<form>
+<label for="one">Makes Regular Eye Contact: </label><label for="">1</label><input ng-model='topicDev.rad7' type="radio" name="one" value="1">
+<label for="">2</label><input ng-model='topicDev.rad7' type="radio" name="one" value="2">
+<label for="">3</label><input ng-model='topicDev.rad7' type="radio" name="one" value="3">
+<label for="">4</label><input ng-model='topicDev.rad7' type="radio" name="one" value="4">
+<label for="">5</label><input ng-model='topicDev.rad7' type="radio" name="one" value="5">
+</form><br>
+<form>
+<label for="one">Voice is Enthusiastic Loud and Clear: </label><label for="">1</label><input ng-model='topicDev.rad8' type="radio" name="one" value="1">
+<label for="">2</label><input ng-model='topicDev.rad8' type="radio" name="one" value="2">
+<label for="">3</label><input ng-model='topicDev.rad8' type="radio" name="one" value="3">
+<label for="">4</label><input ng-model='topicDev.rad8' type="radio" name="one" value="4">
+<label for="">5</label><input ng-model='topicDev.rad8' type="radio" name="one" value="5">
+</form>
+<h3>Miscellanious</h3>
+<form>
+<label for="one">Wearing Proper Attire: </label><label for="">1</label><input ng-model='topicDev.rad9' type="radio" name="one" value="1">
+<label for="">2</label><input ng-model='topicDev.rad9' type="radio" name="one" value="2">
+<label for="">3</label><input ng-model='topicDev.rad9' type="radio" name="one" value="3">
+<label for="">4</label><input ng-model='topicDev.rad9' type="radio" name="one" value="4">
+<label for="">5</label><input ng-model='topicDev.rad9' type="radio" name="one" value="5">
+</form><br>
+<form>
+<label for="one">Makes Good Use of Time: </label><label for="">1</label><input ng-model='topicDev.rad10' type="radio" name="one" value="1">
+<label for="">2</label><input ng-model='topicDev.rad10' type="radio" name="one" value="2">
+<label for="">3</label><input ng-model='topicDev.rad10' type="radio" name="one" value="3">
+<label for="">4</label><input ng-model='topicDev.rad10' type="radio" name="one" value="4">
+<label for="">5</label><input ng-model='topicDev.rad10' type="radio" name="one" value="5">
+</form><br>
+<form>
+<label for="one">Appears Confident: </label><label for="">1</label><input ng-model='topicDev.rad11' type="radio" name="one" value="1">
+<label for="">2</label><input ng-model='topicDev.rad11' type="radio" name="one" value="2">
+<label for="">3</label><input ng-model='topicDev.rad11' type="radio" name="one" value="3">
+<label for="">4</label><input ng-model='topicDev.rad11' type="radio" name="one" value="4">
+<label for="">5</label><input ng-model='topicDev.rad11' type="radio" name="one" value="5">
+</form><br>
+  </div>
+
+    </div>
+    <div ng-show='hidden' id='content' >
+          <h1>Year Up Speaker Evaluation </h1>
+          <p>Name: {{name}}</p>
+        <p>Presenter's Name: {{presname}}</p>
+         <p> Topic: {{topic}}</p>
+         <p>Date: {{ date }}</p>
+         <h3>Organization</h3>
+         <h5>Topic Adequetley Developed: {{topicDev.rad}}</h5>
+         <h5>Good Introduction, Body, & Conclusion: {{topicDev.rad1}}</h5>
+         <h5>Logical Sequence of Idead: {{topicDev.rad2}}</h5>
+         <h3>Language</h3>
+         <h5>Proper Grammar: {{topicDev.rad3}}</h5>
+         <h5>Appropriate Word Choice: {{topicDev.rad4}}</h5>
+         <h5>Correct Pronounciation: {{topicDev.rad5}} </h5>
+         <h3>Delivery</h3>
+         <h5>Good Infliction and Enunciation: {{topicDev.rad6}}</h5>
+         <h5>Makes Regular Eye Contact: {{topicDev.rad7}}</h5>
+         <h5>Voice is Enthusiastic Loud and Clear: {{topicDev.rad8}}</h5>
+         <h3>Miscellaneous</h3>
+         <h5>Wearing Proper Attire: {{topicDev.rad9}}</h5>
+         <h5>Makes Good Use of Time: {{topicDev.rad10}}</h5>
+         <h5>Appears Confident: {{topicDev.rad11}}</h5>
+         <h3>Total: {{ total() }}</h3>
+         <h2>Comments</h2>
+         <h5>What I liked most about this presentation was: {{comment1}}</h5>
+         <h5>Stratigies/Insights: {{comment2}}</h5>
+         <h5>{{am}} motiviated by this presenter because: {{comment3}}</h5>
+         <h5>Some things I may consider doing are: {{comment4}}</h5>
+         <h5>Additional Comments: {{comment5}}</h5>
+    </div>
+
+    <script type="text/javascript">
+     angular.module('myApp', [])
+.controller('myCtrl', ['$scope', function($scope) {
+  var hidden = true;
+  $scope.text = 'Next';
+  $scope.topicDev = {};
+  $scope.topicDev.rad = 0;
+  $scope.topicDev.rad1 = 0;
+  $scope.topicDev.rad2 = 0;
+  $scope.topicDev.rad3 = 0;
+  $scope.topicDev.rad4 = 0;
+  $scope.topicDev.rad5 = 0;
+  $scope.topicDev.rad6 = 0;
+  $scope.topicDev.rad7 = 0;
+  $scope.topicDev.rad8 = 0;
+  $scope.topicDev.rad9 = 0;
+  $scope.topicDev.rad10 = 0;
+  $scope.topicDev.rad11 = 0;
+
+  var today = new Date();
+  $scope.date = today.toString().split('T')[0];
+
+  $scope.hide = function (){
+  $scope.hidden = hidden == true ? true : false;
+    hidden = hidden == true ? false : true;
+    $scope.text = $scope.text == 'Next' ? 'Back' : 'Next';
+
+  }
+  $scope.total = function(){
+    return parseInt($scope.topicDev.rad) + parseInt($scope.topicDev.rad1) + parseInt($scope.topicDev.rad2) + parseInt($scope.topicDev.rad3) + parseInt($scope.topicDev.rad4) + parseInt($scope.topicDev.rad5) + parseInt($scope.topicDev.rad6) + parseInt($scope.topicDev.rad7) + parseInt($scope.topicDev.rad8) + parseInt($scope.topicDev.rad9) + parseInt($scope.topicDev.rad10) + parseInt($scope.topicDev.rad11)
+  }
+
+}]);
+
+    var doc = new jsPDF();
+var specialElementHandlers = {
+  '#editor': function (element, renderer) {
+      return true;
+  }
+};
+
+$('#cmd').click(function () {
+  doc.fromHTML($('#content').html(), 15, 15, {
+      'width': doc.internal.pageSize.width,
+          'elementHandlers': specialElementHandlers
+  });
+  doc.save('SpeakerReview.pdf');
+});
+    </script>
+    <footer>Copyright 2017 @ Zues Yousif</footer>
+  </body>
+</html>
